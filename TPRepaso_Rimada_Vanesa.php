@@ -8,6 +8,7 @@
     $arrayPromedio = promedioVariedades($arrayVinos); // devuelve un arreglo de variedades con sus cantidades y precio promedio
     print_r($arrayPromedio);
  }
+ 
  function cargaVinos(){
 
     $vinos = array();
