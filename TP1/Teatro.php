@@ -48,7 +48,8 @@ class Teatro{
 
       return "(Nombre funcion:".$this->funciones[$posicion]["nombre"].", Precio:".$this->funciones[$posicion]["precio"].")";
     
-    } else return "No se cargaron funciones en esa posicion, revisar arreglo de funciones.";
+    } else 
+        return "No se cargaron funciones en esa posicion, revisar arreglo de funciones.";
 
     }
 

@@ -64,7 +64,7 @@ function cambiarValoresFuncion($teatro){
         print_r($teatro->getFunciones());
         $posicion="";
         while(!is_numeric($posicion)){
-        $posicion = readline("Selecione el numero de la que quiere editar.:");
+        $posicion = readline("Selecione el numero de la que quiere editar:");
         }
         $nombre = readline("Ingrese nuevo nombre:");
         $precio="";
