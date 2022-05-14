@@ -2,6 +2,9 @@
 include 'Viaje.php'; 
 include 'Pasajero.php';
 include 'ResponsableV.php';
+include 'Terrestres.php';
+include 'Aereos.php';
+
 $Viaje = null;
 $opcion = 1;
 
@@ -22,7 +25,21 @@ while($opcion != 0){
             }
             else{
                 if($respuesta== 2)
-                    $Viaje = cargarValoresDefault();
+                   {
+                       //$Viaje = cargarValoresDefault();
+                       $respuestaViaje = readLine("Ingrese (1) para cargar viaje Terrestre, sino (2) viaje Aereo");
+                       switch ($respuestaViaje) {
+                           case 1:
+                                $Viaje = cargarValoresDefaultTerrestre();
+                               break;
+                            case 2:
+                                $Viaje =  cargarValoresDefaultAereo();
+                                break;
+                           default:
+                               echo "Opcion incorrecta ";
+                               break;
+                       }
+                   } 
             }
              break;     
         case 2 :   if($Viaje != null)
@@ -39,19 +56,24 @@ while($opcion != 0){
                 cambiarPasajero($Viaje) ;
                 else
                 echo $mensajeError."\n";
-        break;
+            break;
         case 5 : if($Viaje != null)
                     cambiarResponsable($Viaje); 
                     else
                     echo $mensajeError."\n";
             break;
-    case 6 : if($Viaje != null)
+        case 6 : if($Viaje != null)
                 echo $Viaje; 
                 else
                 echo $mensajeError."\n";
-       break;
-        default : echo "ERROR: elija la opcion correcta: 0-1-2-3-4-5.\n"; 
-            break;
+             break;
+        case 7 :  if($Viaje != null)
+              venderPasaje($Viaje);
+            else
+                    echo $mensajeError."\n";
+           break;
+        default : echo "ERROR: elija la opcion correcta: 0-1-2-3-4-5-6-7.\n"; 
+        break;
     }
 }
 
@@ -67,7 +89,8 @@ echo "
 3-Modificar Viaje
 4-Modificar Pasajero
 5-Modificar Responsable viaje
-6-Visualizar datos\n ";
+6-Visualizar datos
+7-Vender pasaje\n ";
 }
 /**
  * Menu para cambiar datos del viaje
@@ -110,13 +133,24 @@ function crearViaje(){
         echo "ERROR: debe ingresar un numero.\n"; 
     }
   }
+  $importe = readline("Ingrese el importe: ");
+  $respuesta = readline("Si es viaje IDA presione 1, si es viaje IDA y VUELTA presione 2 ");
+  
+  if($respuesta ==1){
+        $ida = true;
+        $vuelta = false;
+    }
+    else{
+        $ida = true;
+        $vuelta = true;
+    }
   echo "Ingrese los datos del responsable: \n";
     $nombre = readline("Ingrese Nombre: \n");
     $apellido = readline("Ingrese Apellido: \n");
     $numEmpleado = readline("Ingrese núm de empleado: ");
     $numLicencia = readline("Ingrese Número de licencia: \n");
     $r = new ResponsableV($numEmpleado, $numLicencia, $nombre, $apellido);
-    $Viaje = new Viaje($codigo, $destino, $capacidad, $r);
+    $Viaje = new Viaje($codigo, $destino, $capacidad, $r, $importe, $ida, $vuelta);
   echo "
 ¡Se creo correctamente un nuevo viaje! \n";
   return $Viaje;
@@ -149,6 +183,7 @@ function agregarPasajero($nuevoViaje){
         }else{
             echo "Error: DNI duplicado\n";
         }
+        return $p;
     }else{
    echo "IMPOSIBLE REALIZAR LA ACCCION: Ya completo la capacidad maxima de pasajeros\n";
     }
@@ -260,10 +295,63 @@ function cargarValoresDefault(){
     $p1 = new Pasajero('Alejandro', 'Rimada', 35254587, 156144758);
     $p2 =  new Pasajero('Marta', 'Maidana', 20178189, 154112233);
     $r = new ResponsableV(01, 1010, 'Gustavo', 'Borquez');
-    $Viaje = new Viaje('Viaje01', 'CABA', 50 , $r);
+    $Viaje = new Viaje('Viaje01', 'CABA', 50 , $r, 15000, 1, 1);
     $Viaje->populatePasajeros($p1);
     $Viaje->populatePasajeros($p2);
     echo "Se cargaron datos por defecto con exito.\n";
     return $Viaje;
 }
+function cargarValoresDefaultTerrestre(){
+    $p1 = new Pasajero('Alejandro', 'Rimada', 35254587, 156144758);
+    $p2 =  new Pasajero('Marta', 'Maidana', 20178189, 154112233);
+    $r = new ResponsableV(01, 1010, 'Gustavo', 'Borquez');
+    
+    $tipoAsientoT = ["cama" => 1, "semicama"=>0];
+    $Viaje = new Terrestres('Viaje01', 'CABA', 50 , $r, 15000, 1, 1,$tipoAsientoT);
+    
+    $Viaje->populatePasajeros($p1);
+    $Viaje->populatePasajeros($p2);
+    echo "Se cargaron datos de Viaje Terrestre por defecto con exito.\n";
+    return $Viaje;
+}
+function cargarValoresDefaultAereo(){
+    $p1 = new Pasajero('Alejandro', 'Rimada', 35254587, 156144758);
+    $p2 =  new Pasajero('Marta', 'Maidana', 20178189, 154112233);
+    $r = new ResponsableV(01, 1010, 'Gustavo', 'Borquez');
+    
+    $tipoAsientoA = ["primeraclase"=>1, "claseeconomica"=>0];
+            //__construct($c, $d, $cant, $responsablev,$importe, $ida, $vuelta, $numeroVuelo, $tipoAsiento, $nombreAerolinea, $cantidadEscalas) 
+    $Viaje = new Aereos('Viaje01', 'CABA', 50 , $r, 15000, 1, 1, 123,$tipoAsientoA,"Aereolinea Argentina", 0);
+    $Viaje->populatePasajeros($p1);
+    $Viaje->populatePasajeros($p2);
+    echo "Se cargaron datos de Viaje Aereo por defecto con exito.\n";
+    return $Viaje;
+}
+function venderPasaje($Viaje){
+    $importe = 0;
+    if(count($Viaje->getPasajeros()) < $Viaje->getCantMaxima()){
+        $clase = get_class($Viaje);
+        echo "** Ingrese los datos del nuevo pasajero para un Viaje:". $clase." con Tipo Asiento:".$Viaje->nombreAsiento()."\n";
+        if($clase=="Aereos"){
+            echo "**INFO ADICIONAL:     El Vuelo número:".$Viaje->getNumeroVuelo()." de la empresa:".$Viaje->getNombreAerolinea() . " tiene ".$Viaje->getCantidadEscalas(). " escalas \n" ;
+        }
+
+        //Pido al usuario los datos para cargar un pasajero
+        $nombre = readline("Ingrese Nombre del Pasajero: ");
+        $apellido = readline("Ingrese Apellido del Pasajero: ");
+        $dni = readline("Ingrese DNI del Pasajero: ");
+        $telefono = readline("Ingrese numero de telefono:");  
+        $p = new Pasajero($nombre,$apellido,$dni,$telefono);
+        $importe = $Viaje->venderPasaje($p);
+        if($importe == 0)
+            echo "ERROR No se pudo vender pasaje";
+        else 
+            echo "Finalizo correctamente la venta, por un importe de $".$importe."\n";
+    }else{
+     echo "IMPOSIBLE REALIZAR LA ACCCION: Ya completo la capacidad maxima de pasajeros\n";
+    }
+
+}
+
+
 ?>       

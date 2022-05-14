@@ -48,7 +48,7 @@
 
         public function __toString()
         {
-             return "Pasajero: Apellido: ".$this->getApellido().", Nombre:".$this->getNombre().", núm dni:".$this->getNumDoc().", Telefono:".$this->getTelefono()."\n";
+             return "\033[1m Pasajero \033[0m Apellido: ".$this->getApellido().", Nombre:".$this->getNombre().", núm dni:".$this->getNumDoc().", Telefono:".$this->getTelefono()."\n";
         }
     }
 ?>

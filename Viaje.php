@@ -5,7 +5,9 @@ class Viaje{
     private $cantMaxima;
     private $pasajeros;
     private $responsablev;
-
+    private $importe;
+    private $ida;
+    private $vuelta;
     /**
      * Constructor del viaje
      * @param string codigo del viaje
@@ -13,12 +15,15 @@ class Viaje{
      * @param int cantidad maxima de pasajeros
      * @param Array arreglo de pasajeros
      */
-    public function __construct($c, $d, $cant, $responsablev){
+    public function __construct($c, $d, $cant, $responsablev,$importe, $ida, $vuelta){
         $this->codigo=$c;
         $this->destino=$d;
         $this->cantMaxima=$cant;
         $this->pasajeros=[];
         $this->responsablev=$responsablev;
+        $this->importe=$importe;
+        $this->ida=$ida;
+        $this->vuelta=$vuelta;
     }
     //=== GET ===
     public function getCodigo(){
@@ -37,6 +42,15 @@ class Viaje{
     {
         return $this->responsablev;
     }
+    public function getImporte(){
+        return $this->importe;
+    }
+    public function getIda(){
+        return $this->ida;
+    }
+    public function getVuelta(){
+        return $this->vuelta;
+    }
     // == SET ==
     public function setCodigo($c){
         $this->codigo=$c;
@@ -53,6 +67,15 @@ class Viaje{
     public function setResponsablev($responsablev)
     {
         $this->responsablev = $responsablev;
+    }
+    public function setImporte($importe){
+        $this->importe = $importe;
+    }
+    public function setIda($ida){
+        $this->ida = $ida;
+    }
+    public function setVuelta($vuelta){
+        $this->vuelta = $vuelta;
     }
 
     // == FUNCTIONS ==
@@ -141,14 +164,45 @@ class Viaje{
      * @return string
      */
     
-    public function __toString(){
+    
+     public function __toString(){
+
         return 
         "\033[4m\033[1mReporte: Viaje Feliz\033[0m
          \n\033[1mCodigo del viaje: \033[0m".$this->getCodigo().
         "\n\033[1mDestino: \033[0m".$this->getDestino().
         "\n\033[1mCapacidad Máxima: \033[0m".$this->getCantMaxima().
+        "\n\033[1mImporte: \033[0m".$this->getImporte().
+        "".
         "\n\033[1mResponsable: \033[0m".$this->getResponsablev().
         "\033[1mPasajeros:\033[0m\n".$this->datosPasajeros()."\n";
+    
     }
+/**
+ * retorna verdadero si la cantidad de pasajeros del viaje es menor a la cantidad máxima de pasajeros y falso caso contrario.
+ */
+    public function hayPasajesDisponible() {
+        $lugar = false;
+        if(count($this->getPasajeros()) < $this->getCantMaxima())
+            $lugar=true;
+        else
+            $lugar = false;
 
+        return $lugar;
+    }
+    public function venderPasaje($pasajero) {
+        $importe = 0;
+        if($this->hayPasajesDisponible()){
+            if($this->getIda() && $this->getVuelta()){
+                $importe = $this->getImporte()+($this->getImporte()*50/100);
+            }
+        }
+        return $importe;
+    }
 }
+
+    
+    
+
+    
+  
